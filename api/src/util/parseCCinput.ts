@@ -12,4 +12,3 @@ export const parseInput = ( body: any ): CostCenter => {
     changeDate: new Date(),
   })
 }
-

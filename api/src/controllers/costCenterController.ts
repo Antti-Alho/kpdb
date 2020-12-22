@@ -37,11 +37,11 @@ const createOne = async (req: Request, res: Response) => {
       res.status(400).send(errors)
     } else {
       const invRepository = getRepository(CostCenter)
-      newCostCenter = await invRepository.save(newCostCenter)
-      res.status(200).send(newCostCenter)
+      await invRepository.insert(newCostCenter)
+      res.status(200).send('OK')
     }
   } catch (error) {
-    res.status(500).send('Something went wrong')
+    res.status(500).send('Something went wrong you probalby tried to insert duplicate key')
   }
 }
 
