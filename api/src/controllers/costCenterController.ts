@@ -1,69 +1,71 @@
 import 'reflect-metadata'
 import { getRepository } from 'typeorm'
 import { CostCenter } from '../entity/CostCenter'
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { validate } from 'class-validator'
+import { parseInput } from '../util/parseCCinput'
 
-const getAll = async (_req: Request, res: Response, next: NextFunction) => {
+const getAll = async (_req: Request, res: Response) => {
   try {
     const invRepository = getRepository(CostCenter)
-    const all = await invRepository.find({})
-    res.send(all)
+    const allcc = await invRepository.find({})
+    res.status(200).send(allcc)
   } catch (error) {
-    next(error)
+    res.status(500).send('Something went wrong')
   }
 }
 
-const getOne = async (req: Request, res: Response, next: NextFunction) => {
+const getOne = async (req: Request, res: Response) => {
+  const id = req.params.id
   try {
-    const id = req.params.id
     const invRepository = getRepository(CostCenter)
-    const one = await invRepository.find({ where: { id: id }})
-    res.send(one)
+    const onecc = await invRepository.findOneOrFail({ where: { id: id }})
+    res.status(200).send(onecc)
   } catch (error) {
-    next(error)
+    res.status(404).send(`${id} not found or valid`)
   }
 }
 
-const createOne = async (req: Request, res: Response, next: NextFunction) => {
+const createOne = async (req: Request, res: Response) => {
   try {
-    let newCostCenter = new CostCenter();
-    newCostCenter = Object.assign(newCostCenter, req.body)
-
+    let newCostCenter: CostCenter
+    newCostCenter = parseInput(req.body)
+    console.log(newCostCenter)
     const errors = await validate(newCostCenter)
+
     if (errors.length > 0) {
-      console.log('validation failed. errors: ', errors);
       res.status(400).send(errors)
     } else {
-      
+      const invRepository = getRepository(CostCenter)
+      newCostCenter = await invRepository.save(newCostCenter)
+      res.status(200).send(newCostCenter)
     }
-    const invRepository = getRepository(CostCenter)
-    newCostCenter = await invRepository.save(newCostCenter)
-    res.status(200).send(newCostCenter)
   } catch (error) {
-    next(error)
+    res.status(500).send('Something went wrong')
   }
 }
 
-const deleteOne = async (req: Request, res: Response, next: NextFunction) => {
+const deleteOne = async (req: Request, res: Response) => {
+  const id = req.params.id
   try {
-    const id = req.params.id
     const invRepository = getRepository(CostCenter)
-    const one = await invRepository.find({ where: { id: id } })
-    res.send(one)
+    await invRepository.delete({ id: id } )
+    res.status(200).send('OK')
   } catch (error) {
-    next(error)
+    res.status(404).send(`${id} not found or valid`)
   }
 }
 
-const changeOne = async (req: Request, res: Response, next: NextFunction) => {
+const changeOne = async (req: Request, res: Response) => {
+  const id = req.params.id
   try {
-    const id = req.params.id
     const invRepository = getRepository(CostCenter)
-    const one = await invRepository.find({ where: { id: id } })
-    res.send(one)
+    let ccToChange = await invRepository.findOneOrFail({ where: { id: id } })
+    ccToChange = parseInput(req.body)
+    await invRepository.save(ccToChange)
+    res.status(200).send('OK')
   } catch (error) {
-    next(error)
+    res.status(404).send(`${id} not found or valid`)
   }
 }
 

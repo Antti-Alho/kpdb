@@ -1,0 +1,11 @@
+PUT http://localhost:3001/api/cc/asdfgh
+Content-Type: application/json
+
+{
+  "id": "asdfgh",
+  "name": "jarin autohuolto",
+  "personInCharge": "jari Syväsuola",
+  "budget": 2000034,
+  "actual": 1223,
+  "creationDate": "2020-12-22T11:26:09.000Z"
+}

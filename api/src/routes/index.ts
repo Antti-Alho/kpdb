@@ -1,6 +1,5 @@
 import express from 'express'
-import inventoryChangeController from '../controllers/inventoryChangeController'
-import cards from './cards'
+import costCenter from './costCenter'
 
 const router = express.Router()
 
@@ -9,9 +8,5 @@ router.get('/', (_req,res) => {
 })
 
 router.use('/cc', costCenter)
-
-if (process.env.NODE_ENV === 'test') {
-  router.use('/test', test)
-}
 
 export default router

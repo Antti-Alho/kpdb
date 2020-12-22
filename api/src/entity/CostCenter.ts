@@ -4,7 +4,7 @@ import { IsInt, Length, IsDate } from "class-validator";
 @Entity()
 export class CostCenter extends BaseEntity {
 
-  @PrimaryColumn({ type: "varchar", length: 6 })
+  @PrimaryColumn({ type: "varchar", length: 6, unique: true })
   @Length(6, 6)
   id: string = ''
 
@@ -16,11 +16,11 @@ export class CostCenter extends BaseEntity {
   @Length(1,30)
   personInCharge: string = ''
 
-  @Column({ type: "number" })
+  @Column({ type: "integer" })
   @IsInt()
   budget: number = 0
 
-  @Column({ type: "number" })
+  @Column({ type: "integer" })
   @IsInt()
   actual: number = 0
 
@@ -28,7 +28,7 @@ export class CostCenter extends BaseEntity {
   @IsDate()
   creationDate: Date = new Date()
 
-  @Column({ type: "datetime" })
+  @Column({ type: "datetime", nullable: true })
   @IsDate()
   changeDate: Date = new Date()
 
