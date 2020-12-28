@@ -32,13 +32,13 @@ const createOne = async (req: Request, res: Response) => {
     newCostCenter = parseInput(req.body)
     console.log(newCostCenter)
     const errors = await validate(newCostCenter)
-
+    console.log(errors)
     if (errors.length > 0) {
       res.status(400).send(errors)
     } else {
       const invRepository = getRepository(CostCenter)
       await invRepository.insert(newCostCenter)
-      res.status(200).send('OK')
+      res.status(200).send(newCostCenter)
     }
   } catch (error) {
     res.status(500).send('Something went wrong you probalby tried to insert duplicate key')
@@ -58,12 +58,15 @@ const deleteOne = async (req: Request, res: Response) => {
 
 const changeOne = async (req: Request, res: Response) => {
   const id = req.params.id
+  console.log(id)
   try {
     const invRepository = getRepository(CostCenter)
     let ccToChange = await invRepository.findOneOrFail({ where: { id: id } })
+    console.log('Before parse: ',ccToChange)
     ccToChange = parseInput(req.body)
+    console.log('After parse: ', ccToChange)
     await invRepository.save(ccToChange)
-    res.status(200).send('OK')
+    res.status(200).send(ccToChange)
   } catch (error) {
     res.status(404).send(`${id} not found or valid`)
   }

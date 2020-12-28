@@ -10,7 +10,7 @@ export class CostCenter extends BaseEntity {
 
   @Column({ type: "varchar", length: 30})
   @Length(1,30)
-  neme: string = ''
+  name: string = ''
 
   @Column({ type: "varchar", length: 40})
   @Length(1,30)

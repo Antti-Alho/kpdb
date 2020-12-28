@@ -1,0 +1,5 @@
+
+.filter {
+  float: right;
+  width: calc(100% - 100px);
+}

@@ -2,7 +2,7 @@ POST http://localhost:3001/api/cc
 Content-Type: application/json
 
 {
-  "id": "asdfbs",
+  "id": "asdnpc",
   "name": "jarin autohuolto",
   "personInCharge": "jari Syväsuo",
   "budget": 2000034,
