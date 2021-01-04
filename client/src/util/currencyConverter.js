@@ -1,4 +1,5 @@
 export const stringToNumber = (numString) => {
+  numString = numString.toString()
   numString = numString.replace('€','')
   numString = numString.split('.')
   if (!numString[1]) numString[1] = '00'
