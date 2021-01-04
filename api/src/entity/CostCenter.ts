@@ -1,18 +1,21 @@
 import { Entity, PrimaryColumn, Column, BaseEntity } from "typeorm";
-import { IsInt, Length, IsDate } from "class-validator";
+import { IsInt, Length, IsDate, IsString } from "class-validator";
 
 @Entity()
 export class CostCenter extends BaseEntity {
 
   @PrimaryColumn({ type: "varchar", length: 6, unique: true })
+  @IsString()
   @Length(6, 6)
   id: string = ''
 
   @Column({ type: "varchar", length: 30})
+  @IsString()
   @Length(1,30)
   name: string = ''
 
   @Column({ type: "varchar", length: 40})
+  @IsString()
   @Length(1,30)
   personInCharge: string = ''
 

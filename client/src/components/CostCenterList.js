@@ -68,7 +68,7 @@ const CostCenterList = () => {
             </Column>
 
             <Column width={150}>
-              <HeaderCell>PersonInCharge</HeaderCell>
+              <HeaderCell>Person In Charge</HeaderCell>
               <Cell dataKey="personInCharge" />
             </Column>
 
