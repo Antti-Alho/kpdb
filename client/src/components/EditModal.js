@@ -13,13 +13,26 @@ const EditModal = ({ visible, setVisible, ccToEdit }) => {
   useEffect(() => {
     setValue(ccToEdit)
   }, [ccToEdit])
+
+  useEffect(()=> {
+    setError({})
+  }, [setVisible])
   
   const model = Schema.Model({
-    id: StringType().isRequired('This field is required.'),
-    name: StringType().isRequired('This field is required.'),
-    personInCharge: StringType().isRequired('This field is required.'),
+    id: StringType()
+      .isRequired('This field is required.')
+      .minLength(6, 'ID must be 6 characters long')
+      .maxLength(6, 'ID must be 6 characters long'),
+    name: StringType()
+      .isRequired('This field is required.')
+      .minLength(1, 'name must be 1 characters long')
+      .maxLength(30, 'name must be 30 characters long'),
+    personInCharge: StringType()
+      .isRequired('This field is required.')
+      .minLength(1, 'person in charge must be 1 characters long')
+      .maxLength(30, 'person in charge must be 30 characters long'),
   });
-
+  let form
   const [value, setValue] = useState({
     id: '',
     name: '',
@@ -32,6 +45,10 @@ const EditModal = ({ visible, setVisible, ccToEdit }) => {
   const dispatch = useDispatch()
   const handleSubmit = () => {
     try {
+      if (!form.check()) {
+        console.error('Form Error');
+        return;
+      }
       dispatch(updateOne( value.id, value))
       dispatch(setNotification(`Cost Center changed`, 'success', 5))
       setVisible(false)
@@ -49,6 +66,7 @@ const EditModal = ({ visible, setVisible, ccToEdit }) => {
             <Modal.Title>Edit {value.id}</Modal.Title>
           </Modal.Header>
           <Form
+            ref={ref => (form = ref)}
             onChange={(formData) => {
               setValue(formData)
             }}
@@ -59,7 +77,7 @@ const EditModal = ({ visible, setVisible, ccToEdit }) => {
             formError={error}
             model={model}
           >
-            <TextField name="id" label="Id" />
+            <TextField name="id" label="Id" disabled/>
             <TextField name="name" label="Name" />
             <TextField name="personInCharge" label="Person In Charge" />
             <TextField accepter={NumberField} name="actual" label="Actual" />
@@ -67,10 +85,16 @@ const EditModal = ({ visible, setVisible, ccToEdit }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => handleSubmit()} appearance="primary">
+          <Button type='submit' onClick={() => {
+              setError({})
+              handleSubmit()
+            }} appearance="primary">
             Save
           </Button>
-          <Button onClick={() => setVisible(false)} appearance="subtle">
+          <Button onClick={() => {
+              setError({})
+              setVisible(false)
+            }} appearance="subtle">
             Cancel
           </Button>
         </Modal.Footer>

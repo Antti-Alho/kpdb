@@ -30,7 +30,6 @@ const createOne = async (req: Request, res: Response) => {
   try {
     let newCostCenter: CostCenter
     newCostCenter = parseInput(req.body)
-    console.log(newCostCenter)
     const errors = await validate(newCostCenter)
     console.log(errors)
     if (errors.length > 0) {
@@ -58,13 +57,10 @@ const deleteOne = async (req: Request, res: Response) => {
 
 const changeOne = async (req: Request, res: Response) => {
   const id = req.params.id
-  console.log(id)
   try {
     const invRepository = getRepository(CostCenter)
     let ccToChange = await invRepository.findOneOrFail({ where: { id: id } })
-    console.log('Before parse: ',ccToChange)
     ccToChange = parseInput(req.body)
-    console.log('After parse: ', ccToChange)
     await invRepository.save(ccToChange)
     res.status(200).send(ccToChange)
   } catch (error) {

@@ -61,7 +61,7 @@ export const createOne = (content) => {
       dispatch({
         type: 'SET_NOTIFICATION',
         data: {
-          notification: 'backend validation failed',
+          notification: 'backend validation failed. This probably means you tried to create duplicate entry.',
           type: 'error',
           time: 5
         }

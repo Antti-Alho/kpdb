@@ -10,12 +10,22 @@ import { useHistory } from "react-router-dom"
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
-  id: StringType().isRequired('This field is required.'),
-  name: StringType().isRequired('This field is required.'),
-  personInCharge: StringType().isRequired('This field is required.'),
+  id: StringType()
+    .isRequired('This field is required.')
+    .minLength(6, 'ID must be 6 characters long')
+    .maxLength(6, 'ID must be 6 characters long'),
+  name: StringType()
+    .isRequired('This field is required.')
+    .minLength(1, 'name must be 1 characters long')
+    .maxLength(30, 'name must be 30 characters long'),
+  personInCharge: StringType()
+    .isRequired('This field is required.')
+    .minLength(1, 'person in charge must be 1 characters long')
+    .maxLength(30, 'person in charge must be 30 characters long'),
 });
 
 const CostCenterFrom = ( props ) => {
+  let form
   const [value, setValue] = useState({
     id: '',
     name: '',
@@ -28,21 +38,25 @@ const CostCenterFrom = ( props ) => {
   
   const dispatch = useDispatch()
   const handleSubmit = () => {
-    console.log(value)
+    if (!form.check()) {
+      console.error('Form Error');
+      return;
+    }
     try {
       dispatch(createOne(value))
       dispatch(setNotification(`Cost Center Created`, 'success', 5))
       history.push('/');
     } catch (error) {
-      console.log(error)
       dispatch(setNotification(`something went wrong :-(`, 'error', 5))
     }
   }
+  
 
   return (
     <div>
       <h2>New cost center</h2>
       <Form
+        ref={ref => (form = ref)}
         onChange={ (formData) => {
           setValue(formData)
         }}
@@ -60,7 +74,13 @@ const CostCenterFrom = ( props ) => {
         <TextField accepter={NumberField} name="budget" label="Budget"/>
 
         <ButtonToolbar>
-          <Button appearance="primary" onClick={handleSubmit}>
+          <Button 
+            appearance="primary" 
+            type='submit' 
+            onClick={() => {
+              setError({})
+              handleSubmit()
+            }}>
             Submit
           </Button>
         </ButtonToolbar>

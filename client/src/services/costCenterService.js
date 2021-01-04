@@ -14,6 +14,7 @@ const getOne = async (id) => {
 
 const create = async (newObject) => {
   const response = await axios.post(baseUrl, newObject)
+  console.log(response)
   return response.data
 }
 
